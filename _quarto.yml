@@ -1,0 +1,9 @@
+project:
+  type: website
+  output-dir: _site
+
+format:
+  revealjs:
+    theme: default
+    transition: slide
+    slide-number: true
