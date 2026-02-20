@@ -2,8 +2,14 @@ project:
   type: website
   output-dir: _site
 
+website:
+  title: "Bidirectional Dijkstra Project"
+
 format:
   revealjs:
     theme: default
     transition: slide
     slide-number: true
+    html-math-method: katex # Faster math rendering for slides
+    code-line-numbers: true # Helpful for explaining lines in your code
+    highlight-style: github
