@@ -10,6 +10,6 @@ format:
     theme: default
     transition: slide
     slide-number: true
-    html-math-method: katex # Faster math rendering for slides
-    code-line-numbers: true # Helpful for explaining lines in your code
+    html-math-method: katex
+    code-line-numbers: true
     highlight-style: github
