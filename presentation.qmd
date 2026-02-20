@@ -1,0 +1,8 @@
+---
+title: "Bidirectional Dijkstra’s Algorithm is Instance-Optimal"
+subtitle: "Haeupler, Hladík, Rozhoň, Tarjan and Tětek"
+author: "Saar Bar Oz, Ron Vulcan, Raz Sapir and Amitai Hazan"
+institute: "Tel Aviv University"
+date: "2026-02-20"
+format: revealjs
+---

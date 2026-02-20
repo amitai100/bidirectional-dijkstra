@@ -1,15 +1,12 @@
 project:
   type: website
-  output-dir: _site
-
-website:
-  title: "Bidirectional Dijkstra Project"
 
 format:
   revealjs:
-    theme: default
-    transition: slide
+    theme: [default, custom.scss]
+    logo: images/tau_logo.png
     slide-number: true
+    show-slide-number: all
     html-math-method: katex
-    code-line-numbers: true
+    chalkboard: true
     highlight-style: github
