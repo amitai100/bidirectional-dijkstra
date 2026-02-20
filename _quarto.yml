@@ -3,7 +3,7 @@ project:
 
 format:
   revealjs:
-    theme: [default, custom.scss]
+    theme: simple
     logo: images/tau_logo.png
     slide-number: true
     show-slide-number: all
