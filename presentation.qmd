@@ -1,0 +1,266 @@
+## Unweighted Graphs
+- Essentially Biderctional BFS
+- No heap is needed
+    - Query complexity equals time complexity
+- $d=\hat{d}$
+
+## Instance Optimality
+- Denote the maximum degree of the graph as $\Delta$.
+
+:::{.callout-note icon="false"}
+## Theorem 4
+The bidirectional BFS algorithm for the shortest $st$-path problem in unweighted graphs is instance-optimal, under both query and time complexity, up to the factor of $O(\Delta)$.
+:::
+
+## Where does the previous proof fail?
+```{dot}
+graph  {
+    rankdir=LR
+    node [shape=circle];
+
+    label="0< δ' < δ = d(s,t) - d(s,u1) - d(v2,t)";
+    labelloc = "t";
+        
+    s [label="s", style=filled, fillcolor=lightblue];
+    t [label="t", style=filled, fillcolor=lightblue];
+    
+    u1 [label="u1"];
+    v1 [label="v1"];
+    u2 [label="u2"];
+    v2 [label="v2"];
+
+    v1--v2 [style="invisible"];
+    u1--u2 [style="invisible"];
+    s -- u1 [style="dotted"];
+    v2 -- t [style="dotted"];
+    u1 -- v1 [label="e1", color=red, penwidth=2];
+    u2 -- v2 [label="e2", color=red, penwidth=2];
+    u1 -- v2 [label="δ'", color=green, penwidth=2];
+    u2 -- v1 [color=green, penwidth=1];
+    
+    {rank=same; u1; u2}
+    {rank=same; v1; v2}
+}
+```
+- We would like to have $\delta > 1$
+
+## Proof of Thm. 4
+- We prove the undirected case.
+- $u_0,v_0$ are the nodes that defined $\mu=d(s,t)$
+$$d(s,u_0) + l(u_0,v_0) + d(v_0,t) = \mu$$
+- WLOG it happened in the forward search.
+- $v_0$ was opened by $w_0$ in the backward run.
+- $x = d(s,u_0), y = d(w_0,t)$
+- $\mu = x + y + 2$
+
+## Proof of Thm. 4
+$$E_s = \{uv \in E \mid d(s,u) \le x\}$$
+$$E_t = \{uv \in E \mid d(u,t) \le y\}$$
+
+```{dot}
+graph  {
+    rankdir=LR
+    node [shape=circle];
+        
+    s [label="s", style=filled, fillcolor=lightblue];
+    t [label="t", style=filled, fillcolor=lightblue];
+    u0 [label="u0"];
+    v0 [label="v0"];
+    w0 [label="w0"];
+
+    s -- u0 [style="dotted", label="x"];
+    w0 -- t [style="dotted", label="y"];
+    u0 -- v0;
+    v0 -- w0;    
+}
+```
+
+## Proof of Thm. 4
+- Let $A'$ be an algorithm that explores at most $min\{E_s, E_t\}/4$ edges in expectation.
+- There exist $e_1=u_1v_1 \in E_s, e_2=u_2v_2 \in E_t$ that are not queried by $A'$ with prob. $\ge 1/2$.
+- WLOG $d(s,u_1) \le d(s,v_1), d(v_2,t) \le d(u_2,t),$.
+
+## Proof of Thm. 4
+- $e_1 \neq e_2$
+```{dot}
+graph  {
+    label="μ = x + y + 2";
+    labelloc = "t";
+    rankdir=LR
+    node [shape=circle];
+        
+    s [label="s", style=filled, fillcolor=lightblue];
+    t [label="t", style=filled, fillcolor=lightblue];
+    u1 [label="u1"];
+    v1 [label="v1"];
+    u2 [label="u2"];
+    v2 [label="v2"];
+
+    s -- u1 [style="dotted", label="<=x"];
+    v2 -- t [style="dotted", label="<=y"];
+    u1 -- v1 [label="e1", color=red, penwidth=2];
+    u2 -- v2 [label="e2", color=red, penwidth=2];
+    v1 -- u2 [style="invisible"]
+}
+```
+
+## Proof of Thm. 4
+- Construct $G'$ by replacing $e_1, e_2$ with $u_1v_2, u_2v_1$.
+- With prob. $\ge 1/2$, $A'$ cannot distinguish $G$ and $G'$.
+- We show that $d_{G'}(s,t) < d_G(s,t)$.
+```{dot}
+graph  {
+    rankdir=LR
+    node [shape=circle];
+        
+    s [label="s", style=filled, fillcolor=lightblue];
+    t [label="t", style=filled, fillcolor=lightblue];
+    u1 [label="u1"];
+    v1 [label="v1"];
+    u2 [label="u2"];
+    v2 [label="v2"];
+
+    s -- u1 [style="dotted", label="?"];
+    v2 -- t [style="dotted", label="?"];
+    u1 -- v1 [label="e1", color=red, penwidth=2];
+    u2 -- v2 [label="e2", color=red, penwidth=2];
+    
+    u1 -- v2 [color=green, penwidth=2];
+    v1 -- u2 [color=green, penwidth=1];
+    
+}
+```
+
+## Proof of Thm. 4
+::: {.callout-note icon="false"}
+### Claim
+$$d_{G'}(s,u_1) \le d_{G}(s,u_1)$$
+$$d_{G'}(v_2,t) \leq d_{G}(v_2,t)$$
+:::
+```{dot}
+graph  {
+    label="μ = x + y + 2";
+    labelloc = "t";
+    rankdir=LR
+    node [shape=circle];
+        
+    s [label="s", style=filled, fillcolor=lightblue];
+    t [label="t", style=filled, fillcolor=lightblue];
+    u1 [label="u1"];
+    v1 [label="v1"];
+    u2 [label="u2"];
+    v2 [label="v2"];
+
+    s -- u1 [style="dotted", label="<=x"];
+    v2 -- t [style="dotted", label="<=y"];
+    u1 -- v1 [label="e1", color=red, penwidth=2];
+    u2 -- v2 [label="e2", color=red, penwidth=2];
+    
+    u1 -- v2 [color=green, penwidth=2];
+    v1 -- u2 [color=green, penwidth=1];
+    
+}
+```
+## Proof of Thm. 4
+::: {.callout-note icon="false"}
+### Claim
+$$d_{G'}(s,u_1) \le d_{G}(s,u_1)$$
+$$d_{G'}(v_2,t) \leq d_{G}(v_2,t)$$
+:::
+- We prove the first inequality.
+- Let $P$ be a shortest $su_1$-path in $G$.
+- We show that $P$ does not use either $e_1$ or $e_2$.
+
+## Proof of Thm. 4
+- $P$ cannot use $e_1$ since $d(s,v_1) \ge d(s,u_1)$.
+- $P$ cannot use $e_2$, otherwise
+$$x+y+2 = d(s,t) \le len(P) + 1 + d(u_2,t) \le x+y+1$$
+
+## Complexity Analysis
+- We have shown that the query complexity of $A'$ is $\Omega(min\{|E_s|, |E_t|\})$.
+- *What about the bidirectional BFS?*
+
+## Complexity Analysis
+::: {.callout-note icon="false"}
+### Lemma
+1. The forward search closes at most one vertice of distance $\ge x+2$ from $s$.
+2. The backward search closes at most one vertice of distance $\ge y+2$ from $t$.
+:::
+- The forward search explores at most the amount of edges adjacent to vertices of distance $\le x+1$ from $s$, plus $\Delta$.
+- That is, $\Delta |E_s| + \Delta = O(\Delta |E_s|)$.
+- Similarly, the backward search explores at most $O(\Delta |E_t|)$ edges.
+- Hence, the query complexity is $O(\Delta min\{|E_s|, |E_t|\})$.
+
+## Proof of Lemma
+::: {.callout-note icon="false"}
+### Claim
+1. The backward search closes $w_0$ before the forward search finishes visitting $u_0$.
+2. The forward search closes $u_0$ before the backward search finishes visitting $v_0$.
+:::
+
+- Follows from the assumption that th edge $u_0v_0$ is explored by the forward search.
+```{dot}
+graph  {
+    rankdir=LR
+    node [shape=circle];
+        
+    s [label="s", style=filled, fillcolor=lightblue];
+    t [label="t", style=filled, fillcolor=lightblue];
+    u0 [label="u0"];
+    v0 [label="v0"];
+    w0 [label="w0"];
+
+    s -- u0 [style="dotted", label="x"];
+    w0 -- t [style="dotted", label="y"];
+    u0 -- v0;
+    v0 -- w0;    
+}
+```
+
+## Proof of Lemma - *part 1*
+- Consider the point in time where the forward search first closes a vertice $u_s$ s.t. $d(s,u_s) = x+2$.
+- The forward search has finihed visitting $u_0$.
+- Hence, the backward search has closed $w_0$.
+- Hence, $d(u_t,t) \ge d(w_0,t) = y$.
+- Hence, stopping condition is satisfied and the algorithm terminates.
+```{dot}
+graph  {
+    rankdir=LR
+    node [shape=circle];
+        
+    s [label="s", style=filled, fillcolor=lightblue];
+    t [label="t", style=filled, fillcolor=lightblue];
+    u0 [label="u0"];
+    v0 [label="v0"];
+    w0 [label="w0"];
+
+    s -- u0 [style="dotted", label="x"];
+    w0 -- t [style="dotted", label="y"];
+    u0 -- v0;
+    v0 -- w0;    
+}
+```
+
+## Proof of Lemma - *part 2*
+- Consider the point in time where the backward search first closes a vertice $u_t$ s.t. $d(t,u_t) = y+2$.
+- The backward search has finished visiting $v_0$.
+- Hence, the backward search has closed $u_0$.
+- Hence, $d(s,u_s) \ge d(s,u_0) =x$.
+- Hence, stopping condition is satisfied and the algorithm terminates.
+```{dot}
+graph  {
+    rankdir=LR
+    node [shape=circle];
+        
+    s [label="s", style=filled, fillcolor=lightblue];
+    t [label="t", style=filled, fillcolor=lightblue];
+    u0 [label="u0"];
+    v0 [label="v0"];
+    w0 [label="w0"];
+
+    s -- u0 [style="dotted", label="x"];
+    w0 -- t [style="dotted", label="y"];
+    u0 -- v0;
+    v0 -- w0;    
+}
+```
