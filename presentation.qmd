@@ -1,3 +1,222 @@
+## Algorithm 2: The Equal-Work Strategy
+
+
+- Unlike heuristics that guess direction, Algorithm 2 enforces equilibrium.
+- It strictly alternates relaxations, ensuring the forward set $|E_s|$ and backward set $|E_t|$ grow at identical rates.
+
+---
+
+## The State Variables
+
+
+- $u_s$: Current active node in Forward Search.
+- $u_t$: Current active node in Backward Search.
+- $\mu$: Length of the shortest path found so far.
+![](images/definitions.png)
+
+
+---
+
+## The Stopping Condition
+
+- $d(s,u_s) + d(u_t,t) \ge \mu$.
+- We stop only when the sum of the search radii exceeds the length of the best path found so far.
+- This guarantees no shorter path can exist in the unexplored parts.
+
+---
+
+## Theorem 3: Instance Optimality
+:::{.callout-note icon="false"}
+## Theorem 3
+- Algorithm 2 is instance-optimal under query complexity for the shortest st-path problem in graphs with positive weights[cite: 80, 81].
+- For any graph $G$ and any correct competitor algorithm $A'$ (Prob$[Correctness] \ge 0.9$): 
+  $$T_{Alg2}(G) \le C \cdot T_{A'}(G)$$.
+:::
+
+---
+
+## Correctness:
+- Assume the algorithm stops with value $\mu$, but a path $P'$ of length $\mu' < \mu$ exists.
+- Define $d_s := d(s,u_s)$ and $d_t := d(u_t,t)$.
+- Choose edge $uv$ on $P'$ s.t. 
+    $$u = \text{argmax} \{d(s,u) \mid d(s,u) < d_s \}$$.
+
+---
+
+## Properties of u and v
+- $d(s,u) < d_s \Rightarrow u$ is closed in the foward pass
+- $d(s,u) < d_s \Rightarrow d_s \le d(s,v)$
+- Therefore: $$d(v,t) = \mu' - d(s,v)  < \mu - d_s \le d_t$$
+```{dot}
+graph {
+    rankdir=LR;
+    node [shape=circle];
+
+    label="P'";
+    labelloc="t"; // Places the label at the top
+
+    s [label="s", style=filled, fillcolor=lightblue];
+    u [label="u", style=filled, fillcolor=yellow];
+    v [label="v", style=filled, fillcolor=yellow];
+    t [label="t", style=filled, fillcolor=orange];
+    
+    s -- u [style="dotted", penwidth=2];
+    u -- v [penwidth=2, label="uv"];
+    v -- t [style="dotted", penwidth=2];
+}
+```
+---
+
+## The Contradiction
+- Since $u$ is closed forward and $v$ is closed backward, edge $uv$ was explored.
+- Algorithm Update Rule: $\mu \leftarrow min(\mu, d(s,u) + l(uv) + d(v,t))$.
+- Result: The algorithm would have updated $\mu$ to be $\le \mu'$, in contradiction to $\mu > \mu'$.
+
+---
+
+## Optimality Proof
+
+- Define set $E_s$ (Forward Explored Edges) and set $E_t$ (Backward Explored Edges).
+- $|E_t| \le |E_s| \le |E_t| + 1$.
+- Total Complexity $\approx 2 \cdot |E_s|$.
+
+---
+
+## The Competitor Assumption
+
+- Suppose there exists a correct algorithm $A'$ that explores significantly less edges.
+- $E[\text{edges explored by } A'] \le \frac{|E_t|}{4}$.
+- Goal: We will prove that $A'$ must be incorrect with probability $\ge 1/2$.
+
+---
+
+## The Probabilistic Reduction
+- By Linearity of Expectation, there must exist edges $u_1v_1 = e_1 \in E_s$ and $u_2v_2 = e_2 \in E_t$ that $A'$ s.t:
+- Prob $[A' \text{ queries } e_1] \le 1/4$. 
+- Prob $[A' \text{ queries } e_2] \le 1/4$.
+- W.O.L.G, in the undirected case:
+$$d(s,u_{1}) \le d(s,v_{1}) \text{ and } d(v_{2},t) \le d(u_{2},t)$$
+
+---
+
+## Proving $d(s,t) > d(s,u_1) + d(v_2,t)$
+::: {.callout-note icon="false"}
+### Claim
+$$d(s,u_1) \le d(s,u_s)$$
+$$d(v_2,t) \le d(v_2,u_t)$$
+:::
+
+- Consider the point in time right before the condition $\hat d(s, u_s) + \hat d(u_t
+, t) ≥ \mu$ starts being true. 
+- At that point, $E_s, E_t$ are set, and therefore $e_1$ has been explored.
+
+---
+
+## $u1$ and $v2$ are closed
+
+- In the directed case: $e_1$ being explored implies $u_1$ is closed in the forward search and therefore $d(s,u_1) \le d(s,u_s)$.
+- In the undirected case: one of $u_1, v_1$ is closed:
+- If $v_1$ is closed, it must hold that $d(s,u_1) \le d(s,u_s)$. 
+- From the assumption $d(s,u_1) \le d(s,v_1)$, therefore $d(s,u_1) \le d(s,u_s)$
+
+---
+
+## The Gap
+
+- Stopping Threshold: $d(s,u_s) + d(u_t,t) < \mu$.
+- $u_1$ and $v_2$ were closed before $u_s$ and $u_t$.
+- Therefore: $d(s,u_1) + d(v_2,t) \le d(s,u_s) + d(u_t,t)$.
+- Result: $d(s,u_1) + d(v_2,t) < \mu$.
+
+---
+
+## Defining Delta
+- We define the "slack" in the system: $\delta = d(s,t) - d(s,u_1) - d(v_2,t)$.
+- From the previous slide, we know $\delta > 0$.
+
+---
+
+## Constructing the Adversarial Graph G'
+- Construct $G'$ by replacing $e_1, e_2$ with $u_1v_2, u_2v_1$ with weights $0 < \delta' < \delta$ and an arbitrary weight.
+- With probability $\ge 1/2$, $A'$ cannot distinguish $G$ and $G'$.
+- We'll show that $d_{G'}(s,t) < d_G(s,t)$.
+
+```{dot}
+graph  {
+    rankdir=LR
+    node [shape=circle];
+        
+    s [label="s", style=filled, fillcolor=lightblue];
+    t [label="t", style=filled, fillcolor=lightblue];
+    u1 [label="u1"];
+    v1 [label="v1"];
+    u2 [label="u2"];
+    v2 [label="v2"];
+
+    s -- u1 [style="dotted", label="?"];
+    v2 -- t [style="dotted", label="?"];
+    u1 -- v1 [label="e1", color=red, penwidth=2];
+    u2 -- v2 [label="e2", color=red, penwidth=2];
+    
+    u1 -- v2 [color=green, penwidth=2, label=" δ′"];
+    v1 -- u2 [color=green, penwidth=1];
+    
+}
+```
+
+---
+
+## Distance Analysis in G'
+
+::: {.callout-note icon="false"}
+### Claim
+$$d_{G'}(s,u_1) \le d_{G}(s,u_1)$$
+$$d_{G'}(v_2,t) \leq d_{G}(v_2,t)$$
+:::
+
+- We will only show the undirected case as the directed is easier.
+- Let $P$ be a shortest $su_1$-path in $G$.
+- We show that $P$ does not use either $e_1$ or $e_2$.
+
+---
+
+## Distance Analysis in G' 
+- $P$ cannot use $e_1$ since $d(s,v_1) \ge d(s,u_1)$.
+- $P$ cannot use $e_2$, otherwise: 
+  - $d(s,v_2) \ge d(s,u_1)$
+  - and there would be a st-Path of length:
+              $$d(s, v_2) + d(v_2, t) \le d(s, u_1) + d(v_1, t) < d(s,t)$$
+
+---
+
+## Distance Analysis in G'
+- $d_{G'}(s,t) \le d_{G'}(s,u_1) + l(u_1,v_2) + d_{G'}(v_2,t)$.
+- $d_{G'}(s,t) \le d_G(s,u_1) + \delta' + d_G(v_2,t)$.
+- Since $\delta' < \delta$: $d_{G'}(s,t) < d_G(s,u_1) + \delta + d_G(v_2,t) = d_G(s,t)$.
+- therefore: $d_{G'}(s,t) < d_G(s,t)$.
+
+---
+
+## The Contradiction
+- $A'$ Output($G$) = $A'$ Output($G'$) (With prob $\ge 1/2$).
+- True Distance ($G$) $\neq$ True Distance ($G'$).
+- Algorithm $A'$ returns the same answer for two graphs with different shortest paths. 
+- It is incorrect with probability $\ge 1/2$.
+
+---
+
+## Final note
+
+- we looked at the case where $e_1 \neq e_2$.
+- the other case is similar and results in a probability $\ge 1/4$ for a mistake.
+
+---
+
+## Conclusion: The Limit of Efficiency
+- We assumed a competitor $A'$ could be 4x faster. 
+- We proved such an algorithm fails on adversarial inputs constructed from its own blind spots.
+- Therefore, Bidirectional Dijkstra (Algorithm 2) is instance-optimal. Q.E.D..
+
 ## Unweighted Graphs
 - Essentially Bidirectional BFS
 - No heap is needed
