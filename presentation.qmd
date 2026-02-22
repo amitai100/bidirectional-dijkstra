@@ -39,7 +39,7 @@
 - Assume the algorithm stops with value $\mu$, but a path $P'$ of length $\mu' < \mu$ exists.
 - Define $d_s := d(s,u_s)$ and $d_t := d(u_t,t)$.
 - Choose edge $uv$ on $P'$ s.t. 
-    $$u = \text{argmax} \{d(s,u) \mid d(s,u) < d_s \}$$.
+    $$u = \text{argmax} \{d(s,u) \mid d(s,u) < d_s \}$$
 
 ---
 
