@@ -69,7 +69,7 @@ graph {
 
 ## The Contradiction
 - Since $u$ is closed forward and $v$ is closed backward, edge $uv$ was explored.
-- Algorithm Update Rule: $\mu \leftarrow min(\mu, d(s,u) + l(uv) + d(v,t))$.
+- Algorithm Update Rule: $\mu \leftarrow \min(\mu, d(s,u) + l(uv) + d(v,t))$.
 - Result: The algorithm would have updated $\mu$ to be $\le \mu'$, in contradiction to $\mu > \mu'$.
 
 ---
