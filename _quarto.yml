@@ -4,7 +4,7 @@ project:
 metadata:
   title: "Bidirectional Dijkstra’s Algorithm is Instance-Optimal"
   subtitle: "Haeupler, Hladík, Rozhoň, Tarjan and Tětek"
-  author: "*Presenting: Saar Bar Oz, Ron Vulcan, Raz Sapir, Amitai Hazan*"
+  author: "*Presenting: Saar Bar Oz, Ron Vulkan, Raz Sapir, Amitai Hazan*"
 
 format:
   revealjs:
