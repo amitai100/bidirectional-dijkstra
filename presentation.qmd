@@ -28,7 +28,7 @@
 ## Theorem 3: Instance Optimality
 :::{.callout-note icon="false"}
 ## Theorem 3
-- Algorithm 2 is instance-optimal under query complexity for the shortest st-path problem in graphs with positive weights[cite: 80, 81].
+- Algorithm 2 is instance-optimal under query complexity for the shortest st-path problem in graphs with positive weights.
 - For any graph $G$ and any correct competitor algorithm $A'$ (Prob$[Correctness] \ge 0.9$): 
   $$T_{Alg2}(G) \le C \cdot T_{A'}(G)$$.
 :::
@@ -44,7 +44,7 @@
 ---
 
 ## Properties of u and v
-- $d(s,u) < d_s \Rightarrow u$ is closed in the foward pass
+- $d(s,u) < d_s \Rightarrow u$ is closed in the forward pass
 - $d(s,u) < d_s \Rightarrow d_s \le d(s,v)$
 - Therefore: $$d(v,t) = \mu' - d(s,v)  < \mu - d_s \le d_t$$
 ```{dot}
@@ -84,16 +84,16 @@ graph {
 
 ## The Competitor Assumption
 
-- Suppose there exists a correct algorithm $A'$ that explores significantly less edges.
+- Suppose there exists a correct algorithm $A'$ that explores significantly fewer edges.
 - $E[\text{edges explored by } A'] \le \frac{|E_t|}{4}$.
 - Goal: We will prove that $A'$ must be incorrect with probability $\ge 1/2$.
 
 ---
 
 ## The Probabilistic Reduction
-- By Linearity of Expectation, there must exist edges $u_1v_1 = e_1 \in E_s$ and $u_2v_2 = e_2 \in E_t$ that $A'$ s.t:
-- Prob $[A' \text{ queries } e_1] \le 1/4$. 
-- Prob $[A' \text{ queries } e_2] \le 1/4$.
+- By linearity of expectation, there exist edges $e_1 = u_1v_1 \in E_s$ and $e_2 = u_2v_2 \in E_t$ such that:
+- $\Pr[A' \text{ queries } e_1] \le 1/4$.
+- $\Pr[A' \text{ queries } e_2] \le 1/4$.
 - W.O.L.G, in the undirected case:
 $$d(s,u_{1}) \le d(s,v_{1}) \text{ and } d(v_{2},t) \le d(u_{2},t)$$
 
@@ -106,8 +106,7 @@ $$d(s,u_1) \le d(s,u_s)$$
 $$d(v_2,t) \le d(v_2,u_t)$$
 :::
 
-- Consider the point in time right before the condition $\hat d(s, u_s) + \hat d(u_t
-, t) ≥ \mu$ starts being true. 
+- Consider the point in time right before the condition $\hat d(s, u_s) + \hat d(u_t, t) \ge \mu$ starts being true. 
 - At that point, $E_s, E_t$ are set, and therefore $e_1$ has been explored.
 
 ---
