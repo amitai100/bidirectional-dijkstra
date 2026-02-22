@@ -14,6 +14,7 @@ format:
     show-slide-number: all
     html-math-method: katex
     chalkboard: true
+    incremental: true
     revealjs-plugins:
       - pointer
     highlight-style: github
