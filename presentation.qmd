@@ -30,7 +30,7 @@
 ## Theorem 3
 - Algorithm 2 is instance-optimal under query complexity for the shortest st-path problem in graphs with positive weights.
 - For any graph $G$ and any correct competitor algorithm $A'$ (Prob$[Correctness] \ge 0.9$): 
-  $$T_{Alg2}(G) \le C \cdot T_{A'}(G)$$.
+  $$T_{Alg2}(G) \le C \cdot T_{A'}(G)$$
 :::
 
 ---
