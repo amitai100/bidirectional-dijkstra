@@ -1,24 +1,25 @@
 ## Unweighted Graphs
 - Essentially Bidirectional BFS
 - No heap is needed
-    - Query complexity equals time complexity
-- $d=\hat{d}$
+  - Query complexity equals time complexity
+- $d = \hat{d}$
 
 ## Instance Optimality
 - Denote the maximum degree of the graph as $\Delta$.
 
-:::{.callout-note icon="false"}
+:::{.callout-important icon="false" .fragment}
 ## Theorem 4
 The bidirectional BFS algorithm for the shortest $st$-path problem in unweighted graphs is instance-optimal, under both query and time complexity, up to the factor of $O(\Delta)$.
 :::
 
 ## Where does the previous proof fail?
+::: {.fragment}
 ```{dot}
 graph  {
     rankdir=LR
     node [shape=circle];
 
-    label="0< δ' < δ = d(s,t) - d(s,u1) - d(v2,t)";
+    label="0 < δ' < δ = d(s,t) - d(s,u1) - d(v2,t)";
     labelloc = "t";
         
     s [label="s", style=filled, fillcolor=lightblue];
@@ -42,21 +43,23 @@ graph  {
     {rank=same; v1; v2}
 }
 ```
+:::
 - We would like to have $\delta > 1$
 
-## Proof of Thm. 4
+## Proof of Thm. 4 - Setup
 - We prove the undirected case.
-- $u_0,v_0$ are the nodes that define $\mu=d(s,t)$
+- $u_0, v_0$ are the nodes that define $\mu = d(s,t)$
 $$d(s,u_0) + l(u_0,v_0) + d(v_0,t) = \mu$$
 - WLOG it happened in the forward search.
 - $v_0$ was opened by $w_0$ in the backward run.
 - $x = d(s,u_0), y = d(w_0,t)$
 - $\mu = x + y + 2$
 
-## Proof of Thm. 4
+## Proof of Thm. 4 - Setup
 $$E_s = \{uv \in E \mid d(s,u) \le x\}$$
 $$E_t = \{uv \in E \mid d(u,t) \le y\}$$
 
+::: {.fragment}
 ```{dot}
 graph  {
     rankdir=LR
@@ -74,45 +77,63 @@ graph  {
     v0 -- w0;    
 }
 ```
+:::
 
-## Proof of Thm. 4
-- Let $A'$ be an algorithm that explores at most $min\{E_s, E_t\}/4$ edges in expectation.
-- There exist $e_1=u_1v_1 \in E_s, e_2=u_2v_2 \in E_t$ that are not queried by $A'$ with prob. $\ge 1/2$.
+## Proof of Thm. 4 - Edge Selection
+- Let $A'$ be an algorithm that explores at most $\min\{E_s, E_t\}/4$ edges in expectation.
+- There exist $e_1 = u_1v_1 \in E_s, e_2 = u_2v_2 \in E_t$ that are not queried by $A'$ with prob. $\ge 1/2$.
 - WLOG, $d(s,u_1) \le d(s,v_1)$ and $d(v_2,t) \le d(u_2,t)$.
 
-## Proof of Thm. 4
-- $e_1 \neq e_2$
+## Proof of Thm. 4 - Edge Selection
+- Note that $e_1 \neq e_2$.
+
+::: {.fragment .fade-in}
 ```{dot}
-graph  {
-    label="μ = x + y + 2";
-    labelloc = "t";
-    rankdir=LR
-    node [shape=circle];
-        
+digraph {
+    rankdir=LR;
+
+    // Global edge setting: hide arrowheads
+    edge [dir=none]; 
+    node [shape=circle, label=""];
+
     s [label="s", style=filled, fillcolor=lightblue];
     t [label="t", style=filled, fillcolor=lightblue];
-    u1 [label="u1"];
-    v1 [label="v1"];
-    u2 [label="u2"];
-    v2 [label="v2"];
 
-    s -- u1 [style="dotted", label="<=x"];
-    v2 -- t [style="dotted", label="<=y"];
-    u1 -- v1 [label="e1", color=red, penwidth=2];
-    u2 -- v2 [label="e2", color=red, penwidth=2];
-    v1 -- u2 [style="invisible"]
+    s -> {u1, u2} [style="dotted"];
+    u1 -> {u3, u4};
+    u2 -> u5;
+
+    {v3, v4} -> v1;
+    v5 -> v2;
+    {v1, v2} -> t [style="dotted"];
+
+    u2 -> v2 [label="i",style="bold", color=red, penwidth=2];
+    u3 -> v3 [style="invisible"];
+    u4 -> v4 [style="invisible"];
+    u5 -> v5 [style="invisible"];
+
+    {rank=source; s}
+    {rank=sink; t}
+    {rank=same; u1; u2}
+    {rank=same; v1; v2}
+    {rank=same; u3; u4; u5}
+    {rank=same; v3; v4; v5}
+
 }
 ```
+:::
 
-## Proof of Thm. 4
+## Proof of Thm. 4 - G'
 - Construct $G'$ by replacing $e_1, e_2$ with $u_1v_2, u_2v_1$.
 - With prob. $\ge 1/2$, $A'$ cannot distinguish $G$ and $G'$.
 - We show that $d_{G'}(s,t) < d_G(s,t)$.
+
+::: {.fragment .fade-in}
 ```{dot}
 graph  {
     rankdir=LR
     node [shape=circle];
-        
+    
     s [label="s", style=filled, fillcolor=lightblue];
     t [label="t", style=filled, fillcolor=lightblue];
     u1 [label="u1"];
@@ -120,8 +141,8 @@ graph  {
     u2 [label="u2"];
     v2 [label="v2"];
 
-    s -- u1 [style="dotted", label="?"];
-    v2 -- t [style="dotted", label="?"];
+    s -- u1 [style="dotted", label=" ≤ x"];
+    v2 -- t [style="dotted", label=" ≤ y"];
     u1 -- v1 [label="e1", color=red, penwidth=2];
     u2 -- v2 [label="e2", color=red, penwidth=2];
     
@@ -130,13 +151,15 @@ graph  {
     
 }
 ```
+:::
 
-## Proof of Thm. 4
-::: {.callout-note icon="false"}
+## Proof of Thm. 4 - G'
+::: {.callout-tip icon="false" .fragment}
 ### Claim
 $$d_{G'}(s,u_1) \le d_{G}(s,u_1)$$
 $$d_{G'}(v_2,t) \leq d_{G}(v_2,t)$$
 :::
+::: {.fragment}
 ```{dot}
 graph  {
     label="μ = x + y + 2";
@@ -150,8 +173,8 @@ graph  {
     u2 [label="u2"];
     v2 [label="v2"];
 
-    s -- u1 [style="dotted", label="<=x"];
-    v2 -- t [style="dotted", label="<=y"];
+    s -- u1 [style="dotted", label=" ≤ x"];
+    v2 -- t [style="dotted", label=" ≤ y"];
     u1 -- v1 [label="e1", color=red, penwidth=2];
     u2 -- v2 [label="e2", color=red, penwidth=2];
     
@@ -160,20 +183,21 @@ graph  {
     
 }
 ```
-## Proof of Thm. 4
+:::
+## Proof of Thm. 4 - Claim Proof
 - We prove $d_{G'}(s,u_1) \le d_{G}(s,u_1)$.
 - Let $P$ be a shortest $su_1$-path in $G$.
 - We show that $P$ does not use either $e_1$ or $e_2$.
 - $P$ cannot use $e_1$ since $d(s,v_1) \ge d(s,u_1)$.
 - $P$ cannot use $e_2$, otherwise
-$$x+y+2 = d(s,t) \le |P| + 1 + d(u_2,t) \le x+y+1$$
+$$x + y + 2 = d(s,t) \le |P| + 1 + d(u_2,t) \le x + y + 1$$
 
-## Complexity Analysis
-- We have shown that the query complexity of $A'$ is $\Omega(min\{|E_s|, |E_t|\})$.
-- *What about the bidirectional BFS?*
+## Complexity Analysis - A'
+- We have shown that the query complexity of $A'$ is $\Omega(\min\{|E_s|, |E_t|\})$.
+- **What about the bidirectional BFS?**
 
-## Complexity Analysis
-::: {.callout-note icon="false"}
+## Complexity Analysis - Bidirectional BFS
+::: {.callout-note icon="false" .fragment}
 ### Lemma
 1. The forward search closes at most one vertex of distance $\ge x+2$ from $s$.
 2. The backward search closes at most one vertex of distance $\ge y+2$ from $t$.
@@ -181,16 +205,18 @@ $$x+y+2 = d(s,t) \le |P| + 1 + d(u_2,t) \le x+y+1$$
 - The forward search explores at most $|\bar{B}_{x+1}(s)| + 1 \le |E_s| + 1$ vertices.
 - That is, $O(\Delta |E_s|)$ edges are explored.
 - Similarly, the backward search explores at most $O(\Delta |E_t|)$ edges.
-- Hence, the query complexity is $O(\Delta min\{|E_s|, |E_t|\})$.
+- Hence, the query complexity is $O(\Delta \min\{|E_s|, |E_t|\})$.
 
 ## Proof of Lemma
-::: {.callout-note icon="false"}
+::: {.callout-tip icon="false" .fragment}
 ### Claim
 1. The backward search closes $w_0$ before the forward search finishes visiting $u_0$.
 2. The forward search closes $u_0$ before the backward search finishes visiting $v_0$.
 :::
 
 - Follows from the assumption that the edge $u_0v_0$ is explored by the forward search.
+
+::: {.fragment}
 ```{dot}
 graph  {
     rankdir=LR
@@ -208,30 +234,33 @@ graph  {
     v0 -- w0;    
 }
 ```
+:::
 
 ## Proof of Lemma - *part 1*
-- Consider the point in time where the forward search first closes a vertex $u_s$ s.t. $d(s,u_s) = x+2$.
+- Consider the point in time where the forward search first closes a vertex $u_s$ s.t. $d(s,u_s) = x + 2$.
 - The forward search has finished visiting $u_0$.
 - Hence, the backward search has closed $w_0$.
 - Hence, $d(u_t,t) \ge d(w_0,t) = y$.
 - Hence, stopping condition is satisfied and the algorithm terminates.
 
 ## Proof of Lemma - *part 2*
-- Consider the point in time where the backward search first closes a vertex $u_t$ s.t. $d(t,u_t) = y+2$.
+- Consider the point in time where the backward search first closes a vertex $u_t$ s.t. $d(t,u_t) = y + 2$.
 - The backward search has finished visiting $v_0$.
 - Hence, the backward search has closed $u_0$.
-- Hence, $d(s,u_s) \ge d(s,u_0) =x$.
+- Hence, $d(s,u_s) \ge d(s,u_0) = x$.
 - Hence, stopping condition is satisfied and the algorithm terminates.
 
 ## Can we do better?
-::: {.callout-note icon="false"}
+::: {.callout-important icon="false" .fragment}
 ### Theorem 5
 Assume the shortest $st$-path problem in unweighted graphs of degree at most $\Delta$. Then there is no algorithm that is instance optimal, under both query and time complexity, for the problem up to a factor of $o(\Delta)$.
 :::
-- ***Remark.*** Can be generlized to weighted graphs where the allowed weights come from a set $W$ with $min(W) > 0$.
+- **Remark.** Can be generalized to weighted graphs where the allowed weights come from a set $W$ with $\min(W) > 0$.
 
-## Proof of Thm. 5
+## Proof of Thm. 5 - Construction
 - $G$: 2 disconnected complete $\Delta$-ary trees of depth $D$.
+
+::: {.fragment .fade-in}
 ```{dot}
 digraph {
     rankdir=LR;
@@ -266,15 +295,15 @@ digraph {
 
 }
 ```
-## Proof of Thm. 5
+:::
+## Proof of Thm. 5 - Construction
 - $G_i$: remove the $i$-th edges in the last level, and connect the corresponding two vertices on the penultimate layer with a new edge.
-    - $d_{G_i}(s,t)=2D-1$, maximal degree is $\Delta+1$.
+  - $d_{G_i}(s,t) = 2D - 1$, maximal degree is $\Delta + 1$.
 
+::: {.fragment .fade-in}
 ```{dot}
 digraph {
     rankdir=LR;
-    
-    // Global edge setting: hide arrowheads
     edge [dir=none]; 
     node [shape=circle, label=""];
 
@@ -300,53 +329,57 @@ digraph {
     {rank=same; v1; v2}
     {rank=same; u3; u4; u5}
     {rank=same; v3; v4; v5}
-
 }
 ```
-
-## Proof of Thm. 5
-- Let $A$ be a randomized algorithm on inputs from $\mathcal{X}=\{G_i\}_{i=1}^{\Delta^D}$ with success probability of $c$.
-- We claim that $A$ has worst case expected complexity of $\Omega(\Delta^D)$.
-
-::: {.callout-note icon="false"}
-### Yao's Minimax Principle (informal)
-The expected cost of a randomized algorithm on the
-worst-case input is at least the expected cost of the best
-deterministic algorithm for any fixed distribution over the inputs.
 :::
 
-## Proof of Thm. 5
+## Proof of Thm. 5 - Overview
+- Let $A$ be a randomized algorithm on inputs from $\mathcal{X} = \{G_i\}_{i=1}^{\Delta^D}$ with success probability of $c$.
+- We claim that $A$ has worst case expected complexity of $\Omega(\Delta^D)$.
+
+::: {.callout-warning icon="false" .fragment}
+### Yao's Minimax Principle (informal)
+The expected cost of a randomized algorithm on the worst-case input is at least the expected cost of the best deterministic algorithm for any fixed distribution over the inputs.
+:::
+
+## Proof of Thm. 5 - Deterministic Algorithm
 - Let $A$ be a deterministic algorithm that answers correctly on a fraction of $\ge c$ of the inputs from $\mathcal{X}$.
 - Let $\mathcal{X}^*$ be the set of inputs on which $A$ answers correctly.
 - Denote by $Q_i$ the sequence of edges queried by $A$ on input $G_i$, before it queries the $i$-th edge in the last level.
-- Let $k = argmax_{i} |Q_i|$.
+- Let $k = \operatorname{argmax}_{i} |Q_i|$.
 
-## Proof of Thm. 5
-- For all $G_i\in \mathcal{X}^*$, denote by $Q^i_k$ the prefix of $Q_k$ before the $i$-th edge in the last level is queried.
+## Proof of Thm. 5 - Lower Bound
+- For all $G_i \in \mathcal{X}^*$, denote by $Q^i_k$ the prefix of $Q_k$ before the $i$-th edge in the last level is queried.
 - We have $Q^i_k = Q_i$. That is, $Q_i$'s are distinct prefixes of $Q_k$.
 - Hence, the expected query complexity of $A$ (assuming uniform distribution over $\mathcal{X}$) is at least
-$$\frac{1}{|\mathcal{X}|}\sum_{i\in \mathcal{X}^*} |Q_i| \ge \frac{1}{|\mathcal{X}|}\sum_{i=1}^{|\mathcal{X}^*|} i = \Omega(|\mathcal{X}|) = \Omega(\Delta^D)$$
+$$\frac{1}{|\mathcal{X}|}\sum_{i \in \mathcal{X}^*} |Q_i| \ge \frac{1}{|\mathcal{X}|}\sum_{i=1}^{|\mathcal{X}^*|} i = \frac{1}{|\mathcal{X}|}\Omega(|\mathcal{X}^*|^2) = \Omega(|\mathcal{X}|) = \Omega(\Delta^D)$$
 
-## Proof of Thm. 5
+## Proof of Thm. 5 - Instance-Specific Algorithm
 - Fix $i$. We describe an algorithm that is correct (on all input graphs) and runs in time $O(\Delta^{D-1})$ on $G_i$.
 
 ## Attempt 1
 - Explore the vertices from s and t until the penultimate layer.
-    - If the input graph is not a double $\Delta$-ary tree, dispose of the run and run any correct algorithm.
+  - If the input graph is not a double $\Delta$-ary tree, dispose of the run and run any correct algorithm.
 - **Query only the $i$-th edge in the last level.**
-    - If that edge connects the two components containing $s$ and $t$, finish.
-    - Otherwise, dispose of the run and run any correct algorithm.
+  - If that edge connects the two components containing $s$ and $t$, finish.
+  - Otherwise, dispose of the run and run any correct algorithm.
 
-## Attempt 2
-- How to find the hidden edge?
-    - Use degrees for identification.
+## How to find the hidden edge?
+- Use degrees to identify vertices.
 - $\Delta$ groups of size $\Delta^{D-2}$ each in the penultimate layer.
+
+::: {.fragment .fade-in}
 ![](images/thm_5.png)
+:::
 
 ## Attempt 2
 - Suppose the hidden edge connects vertices with degree $k$.
 - Explore the vertices from s and t until the penultimate layer.
-    - If the input graph is not a double $\Delta$-ary tree, dispose of the run and run any correct algorithm.
+  - If the input graph is not a double $\Delta$-ary tree, dispose of the run and run any correct algorithm.
 - **Explore the vertices with degree $k$ in the penultimate layer.**
-    - If the hidden edge is found, finish.
-    - Otherwise, dispose of the run and run any correct algorithm.
+  - If the hidden edge is found, finish.
+  - Otherwise, dispose of the run and run any correct algorithm.
+
+## Proof of Thm. 5 - Conclusion
+- A correct randomized algorithm runs in expected time $\Omega(\Delta^D)$ on some input from $\mathcal{X}$.
+- However, there is an instance-specific algorithm that runs in time $O(\Delta^{D-1})$ on that input.
