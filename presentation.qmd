@@ -108,9 +108,9 @@ digraph {
     {v1, v2} -> t [style="dotted"];
 
     u2 -> v2 [label="i",style="bold", color=red, penwidth=2];
-    u3->v3 [style="invisible"];
-    u4->v4 [style="invisible"];
-    u5->v5 [style="invisible"];
+    u3 -> v3 [style="invisible"];
+    u4 -> v4 [style="invisible"];
+    u5 -> v5 [style="invisible"];
 
     {rank=source; s}
     {rank=sink; t}
