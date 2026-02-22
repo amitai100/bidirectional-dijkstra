@@ -196,7 +196,7 @@ $$x + y + 2 = d(s,t) \le |P| + 1 + d(u_2,t) \le x + y + 1$$
 - We have shown that the query complexity of $A'$ is $\Omega(\min\{|E_s|, |E_t|\})$.
 - **What about the bidirectional BFS?**
 
-## Complexity Analysis - Biderectional BFS
+## Complexity Analysis - Bidirectional BFS
 ::: {.callout-note icon="false" .fragment}
 ### Lemma
 1. The forward search closes at most one vertex of distance $\ge x+2$ from $s$.
