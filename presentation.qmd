@@ -114,7 +114,7 @@ $$d(v_2,t) \le d(v_2,u_t)$$
 
 - In the directed case: $e_1$ being explored implies $u_1$ is closed in the forward search and therefore $d(s,u_1) \le d(s,u_s)$.
 - In the undirected case: one of $u_1, v_1$ is closed:
-- If $v_1$ is closed, it must hold that $d(s,u_1) \le d(s,u_s)$. 
+- If $v_1$ is closed, it must hold that $d(s,v_1) \le d(s,u_s)$. 
 - From the assumption $d(s,u_1) \le d(s,v_1)$, therefore $d(s,u_1) \le d(s,u_s)$
 
 ---
@@ -181,7 +181,7 @@ $$d_{G'}(v_2,t) \leq d_{G}(v_2,t)$$
 ## Distance Analysis in G' 
 - $P$ cannot use $e_1$ since $d(s,v_1) \ge d(s,u_1)$.
 - $P$ cannot use $e_2$, otherwise: 
-  - $d(s,v_2) \ge d(s,u_1)$
+  - $d(s,v_2) \le d(s,u_1)$
   - and there would be a st-Path of length:
               $$d(s, v_2) + d(v_2, t) \le d(s, u_1) + d(v_1, t) < d(s,t)$$
 
@@ -190,7 +190,7 @@ $$d_{G'}(v_2,t) \leq d_{G}(v_2,t)$$
 ## Distance Analysis in G'
 - $d_{G'}(s,t) \le d_{G'}(s,u_1) + l(u_1,v_2) + d_{G'}(v_2,t)$.
 - $d_{G'}(s,t) \le d_G(s,u_1) + \delta' + d_G(v_2,t)$.
-- Since $\delta' < \delta$: $d_{G'}(s,t) < d_G(s,u_1) + \delta + d_G(v_2,t) = d_G(s,t)$.
+- Since $\delta' < \delta$: $$d_{G'}(s,t) < d_G(s,u_1) + \delta + d_G(v_2,t) = d_G(s,t)$$
 - therefore: $d_{G'}(s,t) < d_G(s,t)$.
 
 ---
