@@ -1,3 +1,421 @@
+## Bidirectional Dijkstra's Algorithm is Instance-Optimal {.center}
+::: {.notes}
+Welcome everyone. In this part of the presentation, I'll walk you through the first four sections of the paper: the Introduction, Related Work, Preliminaries, and the Warm-Up proof. We'll build up from the problem motivation all the way to a clean proof of instance-optimality in the directed setting.
+:::
+
+---
+
+## The Status Quo: Dijkstra's Algorithm
+
+```{mermaid}
+graph LR
+    S((S)) --> A1 & A2 & A3
+    A1 --> B1 & B2
+    A2 --> B2 & B3
+    A3 --> B3 & B4
+    B1 -.-> W1((...))
+    B4 -.-> W2((...))
+    B2 & B3 --> C1((...))
+    C1 --> T(((T)))
+
+    style S fill:#85C1E9,stroke:#333,stroke-width:2px
+    style T fill:#F1948A,stroke:#333,stroke-width:2px
+    style A1 fill:#EAECEE
+    style A2 fill:#EAECEE
+    style A3 fill:#EAECEE
+    style B1 fill:#EAECEE
+    style B2 fill:#EAECEE
+    style B3 fill:#EAECEE
+    style B4 fill:#EAECEE
+```
+
+::: {.incremental}
+- Near-optimal $O(m + n \log n)$ time, but...
+- Struggles on huge graphs — explores too many irrelevant vertices
+:::
+
+
+::: {.notes}
+Dijkstra's algorithm is a textbook classic. Its time complexity is essentially optimal for general single-source shortest paths. But when the graph has millions or billions of edges, as in road networks or social graphs, it expands outward in all directions and does a lot of unnecessary work just to find one specific target.
+:::
+
+---
+
+## The Practical Solution: Bidirectional Search
+
+```{dot}
+//| fig-height: 2.5
+graph {
+    rankdir=LR;
+    node [shape=circle, width=0.4, fontsize=10];
+    graph [size="6,2"];
+
+    s [label="s", style=filled, fillcolor="#85C1E9", penwidth=2];
+    F1 [label="", style=filled, fillcolor="#EAECEE"];
+    F2 [label="", style=filled, fillcolor="#EAECEE"];
+    M [label="M", style=filled, fillcolor="#ABEBC6", penwidth=3, fixedsize=true, width=0.5];
+    B1 [label="", style=filled, fillcolor="#EAECEE"];
+    B2 [label="", style=filled, fillcolor="#EAECEE"];
+    t [label="t", style=filled, fillcolor="#F1948A", penwidth=2];
+
+    s -- F1;
+    s -- F2;
+    F1 -- M;
+    F2 -- M;
+    M -- B1;
+    M -- B2;
+    B1 -- t;
+    B2 -- t;
+
+    {rank=same; F1; F2}
+    {rank=same; B1; B2}
+}
+```
+
+::: {.incremental}
+- Search forward from $s$ and backward from $t$; halt when they meet
+- Proposed by Dantzig (1963) and Nicholson (1966)
+:::
+
+::: {.notes}
+The intuitive fix is to search from both ends simultaneously. Forward from the source s and backward from the target t. When the two explorations "meet," we can piece together a shortest path. This idea has been around since the early 1960s and is widely used in practice — for example, in routing engines.
+:::
+
+---
+
+## Algorithm 1: The Bidirectional Template
+
+::: {.callout-note icon="false"}
+### Algorithm 1: Bidirectional Search Meta-Algorithm
+**Input:** Graph $G(V, E)$, source $s$, target $t$; Selection function; Stopping condition
+
+Initialize forward search from $s$ and backward search from $t$\
+**while** *stopping condition is not satisfied* **do**\
+$\quad$ Select a direction using the selection rule\
+$\quad$ **if** *forward* **then** relax one edge of Dijkstra from $s$\
+$\quad$ **else** relax one edge of reverse Dijkstra from $t$\
+**end**\
+Recover the shortest path from the two runs
+:::
+
+::: {.notes}
+This is Algorithm 1 from the paper. It's a meta-algorithm — a blueprint that every bidirectional search fits into. The two key design choices are the selection rule and the stopping condition, and the whole history of bidirectional search is about trying to get them right.
+:::
+
+---
+
+## The Key Design Questions
+
+::: {.incremental}
+- Algorithm 1 is a "meta-algorithm" — a blueprint, not a complete solution
+- **Which direction next?** — the Selection Rule
+- **When do we stop?** — the Stopping Condition
+:::
+
+::: {.notes}
+So the template raises two fundamental questions. First, which direction should we expand next — forward or backward? Second, when can we safely stop and be sure we've found the shortest path? Decades of research explored different answers, but none could prove their combination was the best possible. That's what this paper finally resolves.
+:::
+
+---
+
+## Historical Context
+
+::: {.incremental}
+- Dantzig (1963), Nicholson (1966), Pohl (1969) — early bidirectional proposals
+- Various selection rules and stopping conditions explored over decades
+- None achieved a formal proof of instance-optimality until this paper
+:::
+
+::: {.notes}
+Bidirectional search has a long history. Multiple researchers proposed different versions with different rules for which direction to expand and when to stop. But despite extensive practical success, no one had formally proved that bidirectional Dijkstra is the best you can do on every input. That's the gap this paper fills.
+:::
+
+---
+
+## Defining Instance Optimality
+
+$$T_A(x) \le c \cdot T_{A'}(x)$$
+
+::: {.incremental}
+- $T_A(x)$: complexity of algorithm $A$ on input $x$
+- $T_{A'}(x)$: complexity of any correct competitor $A'$ on input $x$
+- $A$ is instance-optimal if this holds for **every** correct $A'$ and **every** $x$, for some constant $c$
+:::
+
+::: {.notes}
+Here is the formal definition. Algorithm A is instance-optimal if there exists a constant c such that for every input x and every correct competitor A-prime, the query cost of A on x is at most c times the query cost of A-prime on x. This is strictly stronger than worst-case optimality because the bound holds input-by-input, not just in the maximum.
+:::
+
+---
+
+## What Does "Correct" Mean?
+
+::: {.incremental}
+- An algorithm is **correct** if it outputs the right answer with probability $\ge 0.9$
+- The constant $0.9$ is arbitrary — any constant $> 1/2$ works by standard probability amplification
+- Instance-optimality applies even against **randomized** competitors
+:::
+
+::: {.notes}
+An important clarification: we allow randomized algorithms, and correctness only requires succeeding with probability at least 0.9. This threshold is not special — by repeating the algorithm and taking a majority vote, you can boost the success probability arbitrarily close to 1. The key point is that the instance-optimality result holds even against these randomized competitors.
+:::
+
+---
+
+## The Paper's Bold Claim
+
+> **Informal Theorem 1.** In the adjacency list model, there is an instance-optimal algorithm for the shortest $st$-path problem on weighted multigraphs. On unweighted multigraphs, there is an algorithm that is instance-optimal up to a factor of $\Delta(G)$; this factor cannot be improved.
+
+::: {.notes}
+Here is the main result of the paper. This is a very strong statement. It doesn't just say bidirectional Dijkstra is good on average or in the worst case — it says that for every single input instance, no correct algorithm can do asymptotically better. That's instance-optimality, and it's a much harder thing to prove than worst-case optimality.
+:::
+
+---
+
+## The A* algorithm
+
+::: {.incremental}
+- A* often outperforms Dijkstra in practice by using a heuristic to focus the search
+:::
+
+```{mermaid}
+graph LR
+    S((Start)) --> A --> B --> C --> T(((Target)))
+
+    S -.-> U1(( ))
+    A -.-> U2(( ))
+    B -.-> U3(( ))
+
+    style S fill:#85C1E9,stroke:#333,stroke-width:2px
+    style T fill:#F1948A,stroke:#333,stroke-width:2px
+    style A fill:#F9E79F
+    style B fill:#F9E79F
+    style C fill:#F9E79F
+```
+
+::: {.notes}
+A natural question is: what about A-star? It's often faster in practice because it uses a heuristic — an estimate of the remaining distance — to guide the search toward the target. So how can bidirectional Dijkstra be optimal if A-star seems to beat it?
+:::
+
+---
+
+## Advice vs. Blind Search
+
+::: {.incremental}
+- A* requires **additional advice**: heuristic distance estimates that must be provided externally
+- Bidirectional search is optimal among algorithms that operate **without** such advice
+:::
+
+::: {.notes}
+The key distinction is the information model. A-star gets extra information — the heuristic function — which is not part of the graph itself. It's external advice. The result in this paper is about algorithms that explore the graph blindly, with no additional guidance. In that setting, bidirectional Dijkstra is the best you can do.
+:::
+
+---
+
+## The Sublinear Query Model
+
+::: {.incremental}
+- The algorithm has **no global knowledge** of the graph
+- It interacts with the graph through simple **queries** to vertices and edges
+:::
+
+::: {.notes}
+Now let's set up the formal framework. The algorithm doesn't get to see the whole graph upfront. Instead, it accesses the graph through local queries. This is the sublinear query model, and it captures the reality of exploring huge graphs where you can't read the entire input.
+:::
+
+---
+
+## The Graph Model
+
+::: {.incremental}
+- Weighted multigraphs: real-valued weights, self-loops and parallel edges allowed
+- Stored in **incidence list** format: vertices numbered $1$ to $n$
+- Each vertex keeps a list of outgoing and incoming edges (same list if undirected)
+- Each edge stores its weight and both endpoints
+:::
+
+::: {.notes}
+Let's be precise about what kind of graphs we're talking about. These are weighted multigraphs — they can have parallel edges and self-loops, with real-valued weights. The graph is stored in incidence list format, where each vertex maintains lists of its incident edges.
+:::
+
+---
+
+## How Queries Work (Undirected)
+
+::: {.incremental}
+- $\text{Degree}(i)$: returns the degree of vertex $i$
+- $\text{Edge}(i, j)$: returns the $j$-th incident edge of $i$, its weight, and the other endpoint
+- For directed graphs: $\text{Indegree}$, $\text{Outdegree}$, $\text{Inedge}$, $\text{Outedge}$
+- Each query costs **one unit** — query count is our complexity measure
+:::
+
+::: {.notes}
+The algorithm interacts with the graph through two types of queries. Degree tells you how many edges a vertex has. Edge returns a specific incident edge along with its weight and the vertex on the other end. For directed graphs, we have separate queries for incoming and outgoing edges. The total number of queries is the measure of complexity we care about.
+:::
+
+---
+
+## The Competitors: Randomized Algorithms
+
+::: {.incremental}
+- The instance-optimality proof applies even against **randomized** algorithms
+- Complexity measured by **expected** number of queries
+- A competitor must be correct with probability $\ge 0.9$
+:::
+
+::: {.notes}
+An important detail: the lower bound isn't just against deterministic competitors. It applies to randomized algorithms too. The competitor is allowed to flip coins, and we measure its expected query count. The only requirement is that it returns the correct shortest path with probability at least 0.9.
+:::
+
+---
+
+## The Shortest $st$-Path Problem
+
+::: {.incremental}
+- **Input:** a (directed or undirected) multigraph $G$ with weight function $\ell : E(G) \to \mathbb{R}_{>0}$
+- Weights induce a distance function $d : V \times V \to \mathbb{R}_{\ge 0}$ (may differ from $d(v,u)$ in directed graphs)
+- **Task:** given vertices $s$ and $t$, return a shortest $st$-path (must specify edges, not just vertices)
+- Weights are **strictly positive** — this is crucial (non-negative case discussed in Section 5.1)
+:::
+
+::: {.notes}
+Let's define the problem precisely. We have a multigraph with strictly positive edge weights. The weights induce shortest-path distances between all pairs of vertices. Given s and t, we need to return an actual shortest path — and in multigraphs, we must specify which edges, not just the sequence of vertices. The strict positivity of weights is important and differs from the non-negative case.
+:::
+
+---
+
+## Dijkstra's Algorithm: Key Terminology
+
+::: {.incremental}
+- $\hat{d}(s, w)$: tentative distance — shortest $sw$-path found so far
+- Vertex states: **unvisited** → **open** → **closed**
+- Each step: close the nearest open vertex $u$, relax all edges leaving it
+:::
+
+::: {.notes}
+Let's recall Dijkstra's algorithm and fix the terminology. Each vertex starts unvisited, becomes open when first discovered, and is closed once we process it. We maintain tentative distances, and in each step we close the nearest open vertex and relax its outgoing edges. Once closed, the tentative distance is final.
+:::
+
+---
+
+## Relaxation Rule
+
+Relaxing edge $uv$:
+
+::: {.incremental}
+- $v$ **unvisited**: open it, set $\hat{d}(s,v) := \hat{d}(s,u) + \ell(uv)$
+- $v$ **open**: update $\hat{d}(s,v) := \min\!\big(\hat{d}(s,v),\; \hat{d}(s,u) + \ell(uv)\big)$
+- $v$ **closed**: do nothing
+:::
+
+::: {.notes}
+When we relax an edge u-v, the action depends on the state of v. If v hasn't been seen, we open it and set its tentative distance. If v is already open, we potentially improve its distance. If v is already closed, we skip it — its distance is already final.
+:::
+
+---
+
+## The Warm-Up: Theorem 2 Setup
+
+::: {.incremental}
+- Setting: **directed** graphs with **positive** edge weights
+- Only **outgoing** edges can be queried
+- Goal: compute the **distance** $d(s,t)$, not necessarily a path
+:::
+
+::: {.notes}
+Before tackling the full bidirectional result, the paper gives a warm-up. The setting is simpler: directed graphs where you can only explore outgoing edges. The goal is just to compute the distance from s to t, not to return the actual path. This is Theorem 2.
+:::
+
+---
+
+## Theorem 2
+
+::: {.callout-note icon="false"}
+### Theorem 2
+Run Dijkstra's algorithm from $s$ and stop once we close some vertex $v$ with $\hat{d}(s, v) = \hat{d}(s, t)$ (possibly $v = t$). Then:
+
+1. This algorithm **correctly computes** the $st$-distance.
+2. No correct deterministic algorithm can perform **fewer queries** on $G$.
+:::
+
+::: {.notes}
+This is the formal statement. We run standard Dijkstra from s and stop as soon as we close a vertex whose tentative distance equals the tentative distance to t. The theorem says two things: first, this gives the correct answer; second, no deterministic algorithm can do better on any given input. Let's prove both parts.
+:::
+
+---
+
+## Proving Correctness
+
+::: {.incremental}
+- When vertex $v$ is closed, $\hat{d}(s,v) = d(s,v)$ — the estimate is exact
+- Dijkstra closes vertices in non-decreasing distance order, so $d(s,t) \ge d(s,v) = \hat{d}(s,t)$
+- Combined with $\hat{d}(s,t) \ge d(s,t)$ (it's an overestimate), we get $\hat{d}(s,t) = d(s,t)$
+:::
+
+::: {.notes}
+Correctness follows from standard Dijkstra properties. When we close a vertex, its tentative distance is final. Since vertices are closed in non-decreasing order, the stopping vertex v satisfies d(s,v) equals d-hat of s,t. But d-hat is always an upper bound on the true distance. Together, these give us the exact distance.
+:::
+
+---
+
+## Proving Instance Optimality
+
+::: {.incremental}
+- Suppose algorithm $A$ correctly computes $d(s,t)$ using **fewer** queries than Dijkstra
+- Then $A$ must skip some edge $uv$ where $u$ is closed by Dijkstra, i.e., $d(s,u) < d(s,t)$
+- $A$ never queried $uv$ — it doesn't know what's on the other end
+:::
+
+::: {.notes}
+Now for the lower bound. Suppose some algorithm A uses fewer queries. Then there must be an edge u-v that Dijkstra would have explored but A did not. Crucially, u is a vertex close to s — its distance from s is strictly less than d(s,t). Since A never queried this edge, it has no idea where it leads.
+:::
+
+---
+
+## Proof by contradiction
+
+::: {.incremental}
+- Construct an adversarial graph $G'$ identical to $G$ except:
+- Replace edge $uv$ with a shortcut edge $ut$ of weight $\delta$, where $\delta < d(s,t) - d(s,u)$
+- This makes $d_{G'}(s,t) = d(s,u) + \delta < d(s,t)$
+:::
+
+```{mermaid}
+graph LR
+    S((s)) -- "d(s,u)" --> U((u))
+    U -- "Skipped Edge" --> V((v))
+    V --> T((t))
+
+    U -. "Shortcut δ" .-> T
+
+    style S fill:#85C1E9,stroke:#333,stroke-width:2px
+    style T fill:#F1948A,stroke:#333,stroke-width:2px
+    style U fill:#F9E79F,stroke:#333,stroke-width:2px
+
+    linkStyle 1 stroke:#E74C3C,stroke-width:2px,stroke-dasharray: 5 5
+    linkStyle 3 stroke:#2ECC71,stroke-width:4px
+```
+
+::: {.notes}
+Here's the adversary's trick. We build a fake graph G-prime that is identical to G everywhere except on that unqueried edge. We replace u-v with a direct shortcut from u to t, with a weight small enough that the new path through u is shorter than the original shortest path. Since A never queried that edge, it can't tell the difference between G and G-prime.
+:::
+
+---
+
+## Completing the Proof
+
+::: {.incremental}
+- In $G'$: the true distance is $d(s,u) + \delta < d(s,t)$
+- Algorithm $A$ never queried the modified edge, so it gives the **same answer** on $G$ and $G'$
+- But $d_G(s,t) \neq d_{G'}(s,t)$ — $A$ must be **wrong** on at least one!
+:::
+
+::: {.notes}
+And that's the punchline. A returns the same answer on both graphs because it never looked at the edge we changed. But the true shortest-path distances are different, so A must be wrong on at least one of them. This contradicts the assumption that A is correct, so no algorithm can consistently beat Dijkstra in this setting. That completes the warm-up proof.
+:::
+
+---
+
 ## Algorithm 2: The Equal-Work Strategy
 
 
