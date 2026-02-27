@@ -1,7 +1,3 @@
-## Bidirectional Dijkstra's Algorithm is Instance-Optimal {.center}
-::: {.notes}
-Welcome everyone. In this part of the presentation, I'll walk you through the first four sections of the paper: the Introduction, Related Work, Preliminaries, and the Warm-Up proof. We'll build up from the problem motivation all the way to a clean proof of instance-optimality in the directed setting.
-:::
 
 ---
 
@@ -121,7 +117,7 @@ So the template raises two fundamental questions. First, which direction should 
 ## Historical Context
 
 ::: {.incremental}
-- Dantzig (1963), Nicholson (1966), Pohl (1969) — early bidirectional proposals
+- Dantzig (1963), Nicholson (1966) — early bidirectional proposals
 - Various selection rules and stopping conditions explored over decades
 - None achieved a formal proof of instance-optimality until this paper
 :::
@@ -340,6 +336,130 @@ Run Dijkstra's algorithm from $s$ and stop once we close some vertex $v$ with $\
 
 ::: {.notes}
 This is the formal statement. We run standard Dijkstra from s and stop as soon as we close a vertex whose tentative distance equals the tentative distance to t. The theorem says two things: first, this gives the correct answer; second, no deterministic algorithm can do better on any given input. Let's prove both parts.
+:::
+
+---
+
+## Dijkstra Example: Initial State
+
+```{dot}
+//| fig-height: 3
+digraph {
+    rankdir=LR;
+    node [shape=circle, style=filled, width=0.5, fontsize=11];
+
+    s [label="s\n0", fillcolor="#85C1E9"];
+    a [label="a\n∞", fillcolor="#EAECEE"];
+    b [label="b\n∞", fillcolor="#EAECEE"];
+    c [label="c\n∞", fillcolor="#EAECEE"];
+    t [label="t\n∞", fillcolor="#EAECEE"];
+
+    s -> a [label="2"];
+    s -> b [label="5"];
+    a -> b [label="1"];
+    a -> c [label="4"];
+    b -> t [label="3"];
+    c -> t [label="1"];
+}
+```
+
+Green = closed, Blue = open, Gray = unvisited
+
+::: {.notes}
+Here's a small example graph. We start with s open at distance 0, and everything else unvisited at infinity. Let's walk through a few iterations and see when Theorem 2's stopping condition kicks in.
+:::
+
+---
+
+## Dijkstra Example: Close $s$
+
+```{dot}
+//| fig-height: 3
+digraph {
+    rankdir=LR;
+    node [shape=circle, style=filled, width=0.5, fontsize=11];
+
+    s [label="s\n0", fillcolor="#ABEBC6", penwidth=2];
+    a [label="a\n2", fillcolor="#85C1E9"];
+    b [label="b\n5", fillcolor="#85C1E9"];
+    c [label="c\n∞", fillcolor="#EAECEE"];
+    t [label="t\n∞", fillcolor="#EAECEE"];
+
+    s -> a [label="2", color="red", penwidth=2];
+    s -> b [label="5", color="red", penwidth=2];
+    a -> b [label="1"];
+    a -> c [label="4"];
+    b -> t [label="3"];
+    c -> t [label="1"];
+}
+```
+
+Close $s$ → relax edges: $\hat{d}(a)=2$, $\hat{d}(b)=5$
+
+::: {.notes}
+We close s — it's the only open vertex. We relax its two outgoing edges. Vertex a gets tentative distance 2, vertex b gets 5. Both become open. S is now closed, shown in green.
+:::
+
+---
+
+## Dijkstra Example: Close $a$
+
+```{dot}
+//| fig-height: 3
+digraph {
+    rankdir=LR;
+    node [shape=circle, style=filled, width=0.5, fontsize=11];
+
+    s [label="s\n0", fillcolor="#ABEBC6"];
+    a [label="a\n2", fillcolor="#ABEBC6", penwidth=2];
+    b [label="b\n3", fillcolor="#85C1E9"];
+    c [label="c\n6", fillcolor="#85C1E9"];
+    t [label="t\n∞", fillcolor="#EAECEE"];
+
+    s -> a [label="2"];
+    s -> b [label="5"];
+    a -> b [label="1", color="red", penwidth=2];
+    a -> c [label="4", color="red", penwidth=2];
+    b -> t [label="3"];
+    c -> t [label="1"];
+}
+```
+
+Close $a$ → relax: $\hat{d}(b)=\min(5, 3)=3$, $\hat{d}(c)=6$
+
+::: {.notes}
+Now a is the closest open vertex at distance 2, so we close it. Relaxing edge a-b improves b's distance from 5 to 3. Relaxing a-c opens c with distance 6.
+:::
+
+---
+
+## Dijkstra Example: Close $b$ — Stop!
+
+```{dot}
+//| fig-height: 3
+digraph {
+    rankdir=LR;
+    node [shape=circle, style=filled, width=0.5, fontsize=11];
+
+    s [label="s\n0", fillcolor="#ABEBC6"];
+    a [label="a\n2", fillcolor="#ABEBC6"];
+    b [label="b\n3", fillcolor="#ABEBC6", penwidth=2];
+    c [label="c\n6", fillcolor="#85C1E9"];
+    t [label="t\n6", fillcolor="#85C1E9"];
+
+    s -> a [label="2"];
+    s -> b [label="5"];
+    a -> b [label="1"];
+    a -> c [label="4"];
+    b -> t [label="3", color="red", penwidth=2];
+    c -> t [label="1"];
+}
+```
+
+Close $b$ → $\hat{d}(t)=6$. Next vertex to close has $\hat{d} = \hat{d}(s,t)$ → **stop!** $d(s,t)=6$ ✓
+
+::: {.notes}
+We close b at distance 3 and relax b-t, opening t with tentative distance 6. The next vertex to close would have tentative distance 6, which equals d-hat of s,t. By Theorem 2's stopping rule, we stop here and output d(s,t)=6. This is correct, and the theorem guarantees no algorithm could have used fewer queries.
 :::
 
 ---
