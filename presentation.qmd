@@ -991,7 +991,7 @@ $$x + y + 2 = d(s,t) \le |P| + 1 + d(u_2,t) \le x + y + 1$$
 
 ## Complexity Analysis
 - We have shown that the query complexity of $A'$ is $\Omega(\min\{|E_s|, |E_t|\})$.
-- We will show that the query complexity of the biderctional BFS is $O(\Delta \min\{|E_s|, |E_t|\})$.
+- We will show that the query complexity of the bidirectional BFS is $O(\Delta \min\{|E_s|, |E_t|\})$.
 
 ---
 
@@ -1229,7 +1229,7 @@ $$\begin{aligned}
 
 ## Attempt 2
 - Suppose the hidden edge connects vertices with degree $k$.
-- Apply BFS to explore the vertices from $s$ and $t$ until the until the penultimate layer.
+- Apply BFS to explore the vertices from $s$ and $t$ until the penultimate layer.
 - *Explore the vertices with degree $k$ in the penultimate layer.*
 - **If** the hidden edge is not found, **or** the input graph is not a double $\Delta$-ary tree,
 - **Then** dispose of the run and run any correct algorithm.
