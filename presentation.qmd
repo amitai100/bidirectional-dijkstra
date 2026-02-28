@@ -721,7 +721,7 @@ $$d_{G'}(v_2,t) \leq d_{G}(v_2,t)$$
 - $P$ cannot use $e_2$, otherwise: 
   - $d(s,v_2) \le d(s,u_1)$
   - and there would be a st-Path of length:
-              $$d(s, v_2) + d(v_2, t) \le d(s, u_1) + d(v_1, t) < d(s,t)$$
+              $$d(s, v_2) + d(v_2, t) \le d(s, u_1) + d(v_2, t) < d(s,t)$$
 
 ---
 
