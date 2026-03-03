@@ -168,46 +168,6 @@ Here is the main result of the paper. This is a very strong statement. It doesn'
 
 ---
 
-## The A* algorithm
-
-::: {.incremental}
-- A* often outperforms Dijkstra in practice by using a heuristic to focus the search
-:::
-
-```{mermaid}
-graph LR
-    S((Start)) --> A --> B --> C --> T(((Target)))
-
-    S -.-> U1(( ))
-    A -.-> U2(( ))
-    B -.-> U3(( ))
-
-    style S fill:#85C1E9,stroke:#333,stroke-width:2px
-    style T fill:#F1948A,stroke:#333,stroke-width:2px
-    style A fill:#F9E79F
-    style B fill:#F9E79F
-    style C fill:#F9E79F
-```
-
-::: {.notes}
-A natural question is: what about A-star? It's often faster in practice because it uses a heuristic — an estimate of the remaining distance — to guide the search toward the target. So how can bidirectional Dijkstra be optimal if A-star seems to beat it?
-:::
-
----
-
-## Advice vs. Blind Search
-
-::: {.incremental}
-- A* requires **additional advice**: heuristic distance estimates that must be provided externally
-- Bidirectional search is optimal among algorithms that operate **without** such advice
-:::
-
-::: {.notes}
-The key distinction is the information model. A-star gets extra information — the heuristic function — which is not part of the graph itself. It's external advice. The result in this paper is about algorithms that explore the graph blindly, with no additional guidance. In that setting, bidirectional Dijkstra is the best you can do.
-:::
-
----
-
 ## The Sublinear Query Model
 
 ::: {.incremental}
@@ -269,7 +229,7 @@ An important detail: the lower bound isn't just against deterministic competitor
 
 ::: {.incremental}
 - **Input:** a (directed or undirected) multigraph $G$ with weight function $\ell : E(G) \to \mathbb{R}_{>0}$
-- Weights induce a distance function $d : V \times V \to \mathbb{R}_{\ge 0}$ (may differ from $d(v,u)$ in directed graphs)
+- Weights induce a distance function $d : V \times V \to \mathbb{R}_{> 0}$ (may differ from $d(v,u)$ in directed graphs)
 - **Task:** given vertices $s$ and $t$, return a shortest $st$-path (must specify edges, not just vertices)
 - Weights are **strictly positive** — this is crucial (non-negative case discussed in Section 5.1)
 :::
