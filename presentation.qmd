@@ -589,7 +589,7 @@ And that's the punchline. A returns the same answer on both graphs because it ne
 
 -   $d(s,u) < d_s \Rightarrow u$ is closed in the forward pass
 -   $d(s,u) < d_s \Rightarrow d_s \le d(s,v)$
--   Therefore: $$d(v,t) = \mu' - d(s,v)  < \mu - d_s \le d_t$$
+-   **Therefore:** $$d(v,t) = \mu' - d(s,v)  < \mu - d_s \le d_t$$
 
 ![](images/path.png)
 
@@ -599,7 +599,7 @@ And that's the punchline. A returns the same answer on both graphs because it ne
 
 -   Since $u$ is closed forward and $v$ is closed backward, edge $uv$ was explored.
 -   Algorithm Update Rule: $\mu \leftarrow \min(\mu, d(s,u) + l(uv) + d(v,t))$.
--   Result: The algorithm would have updated $\mu$ to be $\le \mu'$, in contradiction to $\mu > \mu'$.
+-   **Result:** The algorithm would have updated $\mu$ to be $\le \mu'$, in contradiction to $\mu > \mu'$.
 
 ------------------------------------------------------------------------
 
@@ -607,7 +607,7 @@ And that's the punchline. A returns the same answer on both graphs because it ne
 
 -   Define set $E_s$ (Forward Explored Edges) and set $E_t$ (Backward Explored Edges).
 -   $|E_t| \le |E_s| \le |E_t| + 1$.
--   Total Complexity $\approx 2 \cdot |E_s|$.
+-   **Total Complexity** $\approx 2 \cdot |E_s|$.
 
 ------------------------------------------------------------------------
 
@@ -615,7 +615,7 @@ And that's the punchline. A returns the same answer on both graphs because it ne
 
 -   Suppose there exists a correct algorithm $A'$ that explores significantly fewer edges.
 -   $E[\text{edges explored by } A'] \le \frac{|E_t|}{4}$.
--   Goal: We will prove that $A'$ must be incorrect with probability $\ge 1/2$.
+-   **Goal:** We will prove that $A'$ must be incorrect with probability $\ge 1/2$.
 
 ------------------------------------------------------------------------
 
@@ -655,7 +655,7 @@ $$d(s,u_1) \le d(s,u_s)$$ $$d(v_2,t) \le d(v_2,u_t)$$
 -   Stopping Threshold: $d(s,u_s) + d(u_t,t) < \mu$.
 -   $u_1$ and $v_2$ were closed before $u_s$ and $u_t$.
 -   Therefore: $d(s,u_1) + d(v_2,t) \le d(s,u_s) + d(u_t,t)$.
--   Result: $d(s,u_1) + d(v_2,t) < \mu$.
+-   **Result:** $d(s,u_1) + d(v_2,t) < \mu$.
 
 ------------------------------------------------------------------------
 
@@ -725,7 +725,7 @@ $$d_{G'}(s,u_1) \le d_{G}(s,u_1)$$ $$d_{G'}(v_2,t) \leq d_{G}(v_2,t)$$
 -   $d_{G'}(s,t) \le d_{G'}(s,u_1) + l(u_1,v_2) + d_{G'}(v_2,t)$.
 -   $d_{G'}(s,t) \le d_G(s,u_1) + \delta' + d_G(v_2,t)$.
 -   Since $\delta' < \delta$: $$d_{G'}(s,t) < d_G(s,u_1) + \delta + d_G(v_2,t) = d_G(s,t)$$
--   therefore: $d_{G'}(s,t) < d_G(s,t)$.
+-   **Therefore:** $d_{G'}(s,t) < d_G(s,t)$.
 
 ------------------------------------------------------------------------
 
@@ -740,8 +740,8 @@ $$d_{G'}(s,u_1) \le d_{G}(s,u_1)$$ $$d_{G'}(v_2,t) \leq d_{G}(v_2,t)$$
 
 ## Final note
 
--   we looked at the case where $e_1 \neq e_2$.
--   the other case is similar and results in a probability $\ge 1/4$ for a mistake.
+-   We looked at the case where $e_1 \neq e_2$.
+-   The other case is similar and results in a probability $\ge 1/4$ for a mistake.
 
 ------------------------------------------------------------------------
 
