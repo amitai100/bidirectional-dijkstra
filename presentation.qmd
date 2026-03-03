@@ -755,9 +755,15 @@ $$d_{G'}(s,u_1) \le d_{G}(s,u_1)$$ $$d_{G'}(v_2,t) \leq d_{G}(v_2,t)$$
 
 ## Remarks on the Setup & Proof
 
-- **Algorithmic Flexibility:** Strict alternation isn't mandatory, maintaining a balanced number of explored edges in both directions (up to constant factors) suffices.
+- **Multigraphs are Required:** If restricted to simple graphs, adding the adversarial cross-edge $u_1v_2$ might overwrite an existing edge the competitor already queried, breaking the illusion that $G$ and $G'$ are indistinguishable.
 - **No Zero-Weight Edges:** Positive weights are crucial. With 0-weight edges, an algorithm tailored with "advice" could trivially verify a path in logarithmic time, breaking instance optimality.
-- **Arbitrarily Small Weights:** The adversarial graph requires weights where $\delta' < \delta$. In unweighted graphs (minimum weight 1), only *approximate* instance optimality is achievable.
+- **Arbitrarily Small Weights:** The adversarial graph requires weights where $\delta' < \delta$. 
+
+------------------------------------------------------------------------
+
+## Remarks on the Setup & Proof
+
+- **Algorithmic Flexibility:** Strict alternation isn't mandatory, maintaining a balanced number of explored edges in both directions (up to constant factors) suffices.
 - **Bidirectional Access:** Directed edges must be queryable from both endpoints. If restricted to forward-only access, standard Dijkstra becomes instance-optimal.
 - **Distance vs. Path:** The proof shows Algorithm 2 (which finds the actual shortest path) is instance-optimal even against algorithms solving the strictly easier problem of just computing the st-distance.
 
