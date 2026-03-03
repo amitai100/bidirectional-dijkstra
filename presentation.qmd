@@ -632,8 +632,8 @@ $$d(s,u_1) \le d(s,u_s)$$ $$d(v_2,t) \le d(v_2,u_t)$$
 
 ## $u1$ and $v2$ are closed
 
--   In the directed case: $e_1$ being explored implies $u_1$ is closed in the forward search and therefore $d(s,u_1) \le d(s,u_s)$.
--   In the undirected case: one of $u_1, v_1$ is closed:
+-   **In the directed case:** $e_1$ being explored implies $u_1$ is closed in the forward search and therefore $d(s,u_1) \le d(s,u_s)$.
+-   **In the undirected case:** one of $u_1, v_1$ is closed:
 -   If $v_1$ is closed, it must hold that $d(s,v_1) \le d(s,u_s)$.
 -   From the assumption $d(s,u_1) \le d(s,v_1)$, therefore $d(s,u_1) \le d(s,u_s)$
 
