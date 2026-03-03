@@ -559,7 +559,7 @@ And that's the punchline. A returns the same answer on both graphs because it ne
 
 ## Algorithm 2  
 
-![](images/algo 2.png)
+![](images/algo_2.png)
 
 ------------------------------------------------------------------------
 
