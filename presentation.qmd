@@ -440,12 +440,41 @@ Correctness follows from standard Dijkstra properties. When we close a vertex, i
 
 ::: incremental
 -   Suppose algorithm $A$ correctly computes $d(s,t)$ using **fewer** queries than Dijkstra
--   Then $A$ must skip some edge $uv$ where $u$ is closed by Dijkstra, i.e., $d(s,u) < d(s,t)$
--   $A$ never queried $uv$ — it doesn't know what's on the other end
+-   Then $A$ must skip some edge $uv$ that Dijkstra would have queried
+-   We know $d(s,u) \le d(s,t)$ since Dijkstra closes vertices in non-decreasing order
 :::
 
 ::: notes
-Now for the lower bound. Suppose some algorithm A uses fewer queries. Then there must be an edge u-v that Dijkstra would have explored but A did not. Crucially, u is a vertex close to s — its distance from s is strictly less than d(s,t). Since A never queried this edge, it has no idea where it leads.
+Now for the lower bound. Suppose some algorithm A uses fewer queries. Then there must be an edge u-v that Dijkstra would have explored but A did not. Since Dijkstra closes vertices in non-decreasing distance order, we know that d(s,u) is at most d(s,t). But can they be equal?
+:::
+
+------------------------------------------------------------------------
+
+## Why $d(s,u) < d(s,t)$ (Strict Inequality)
+
+::: incremental
+-   Could $d(s,u) = d(s,t)$? Assume so, toward a contradiction
+-   Then all vertices with distance $< d(s,t)$ were already closed
+-   In particular, all of $t$'s incoming neighbors were explored
+-   So $\hat{d}(s,t) = d(s,t)$ — the tentative distance is exact
+:::
+
+::: notes
+We need the inequality to be strict. Suppose for contradiction that d(s,u) equals d(s,t). Then every vertex closer than d(s,t) has already been closed, which means all incoming neighbors of t have been explored. That means the tentative distance to t is already exact.
+:::
+
+------------------------------------------------------------------------
+
+## Why $d(s,u) < d(s,t)$ (Continued)
+
+::: incremental
+-   When we closed $u$, we had $\hat{d}(s,u) = d(s,u) = d(s,t) = \hat{d}(s,t)$
+-   By Theorem 2's stopping rule, Dijkstra should have **stopped** at $u$
+-   It would never have queried edge $uv$ — contradiction!
+:::
+
+::: notes
+When we closed u, its tentative distance equaled d-hat of s,t, which is exactly the stopping condition from Theorem 2. So Dijkstra would have stopped before ever querying edge u-v. That contradicts our assumption that Dijkstra queries u-v, so d(s,u) must be strictly less than d(s,t). This means A is ignoring an edge from a vertex that's genuinely closer to s than t is.
 :::
 
 ------------------------------------------------------------------------
