@@ -613,7 +613,7 @@ And that's the punchline. A returns the same answer on both graphs because it ne
 -   By linearity of expectation, there exist edges $e_1 = u_1v_1 \in E_s$ and $e_2 = u_2v_2 \in E_t$ such that:
 -   $\Pr[A' \text{ queries } e_1] \le 1/4$.
 -   $\Pr[A' \text{ queries } e_2] \le 1/4$.
--   W.O.L.G, in the undirected case: $$d(s,u_{1}) \le d(s,v_{1}) \text{ and } d(v_{2},t) \le d(u_{2},t)$$
+-   W.L.O.G, in the undirected case: $$d(s,u_{1}) \le d(s,v_{1}) \text{ and } d(v_{2},t) \le d(u_{2},t)$$
 
 ------------------------------------------------------------------------
 
@@ -622,7 +622,7 @@ And that's the punchline. A returns the same answer on both graphs because it ne
 ::: {.callout-note icon="false"}
 ### Claim
 
-$$d(s,u_1) \le d(s,u_s)$$ $$d(v_2,t) \le d(v_2,u_t)$$
+$$d(s,u_1) \le d(s,u_s)$$ $$d(v_2,t) \le d(u_t,t)$$
 :::
 
 -   Consider the point in time right before the condition $\hat d(s, u_s) + \hat d(u_t, t) \ge \mu$ starts being true.
