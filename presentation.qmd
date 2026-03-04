@@ -455,7 +455,7 @@ Now for the lower bound. Suppose some algorithm A uses fewer queries. Then there
 ::: incremental
 -   Could $d(s,u) = d(s,t)$? Assume so, toward a contradiction
 -   Then all vertices with distance $< d(s,t)$ were already closed
--   In particular, all of $t$'s incoming neighbors were explored
+-   In particular, all of $t$'s incoming neighbors with smaller distance were explored
 -   So $\hat{d}(s,t) = d(s,t)$ — the tentative distance is exact
 :::
 
