@@ -939,7 +939,7 @@ $$\begin{aligned}
 ## Attempt 1
 
 -   Apply BFS to explore the vertices from $s$ and $t$ until the penultimate layer.
--   *Query only the* $i$-th edge in the last level.
+-   *Query only the $i$-th edge in the last level.*
 -   **If** that edge doesn't connect the two explored components, **or** the input graph is not a double $\Delta$-ary tree,
 -   **Then** dispose of the run and run any correct algorithm.
 -   **Otherwise**, finish.
@@ -961,7 +961,7 @@ $$\begin{aligned}
 
 -   Suppose the hidden edge connects vertices with degree $k$.
 -   Apply BFS to explore the vertices from $s$ and $t$ until the penultimate layer.
--   *Explore the vertices with degree* $k$ in the penultimate layer.
+-   *Explore the vertices with degree $k$ in the penultimate layer.*
 -   **If** the hidden edge is not found, **or** the input graph is not a double $\Delta$-ary tree,
 -   **Then** dispose of the run and run any correct algorithm.
 -   **Otherwise** finish.
@@ -1130,82 +1130,6 @@ graph  {
 
 ------------------------------------------------------------------------
 
-## Proof of Thm. 4 - G'
-
-::: {.callout-tip .fragment .fade-in icon="false"}
-### Claim
-
-$$d_{G'}(s,u_1) \le d_{G}(s,u_1)$$ $$d_{G'}(v_2,t) \leq d_{G}(v_2,t)$$
-:::
-
-::: {.fragment .fade-in}
-```{dot}
-graph  {
-    label="μ = x + y + 2";
-    labelloc = "t";
-    rankdir=LR
-    node [shape=circle];
-    s [label="s", style=filled, fillcolor=lightblue];
-    t [label="t", style=filled, fillcolor=lightblue];
-    u1 [label="u1"];
-    v1 [label="v1"];
-    u2 [label="u2"];
-    v2 [label="v2"];
-
-    s -- u1 [style="dotted", label=" ≤ x"];
-    v2 -- t [style="dotted", label=" ≤ y"];
-    u1 -- v1 [label="e1", color=red, penwidth=2];
-    u2 -- v2 [label="e2", color=red, penwidth=2];
-    
-    u1 -- v2 [color=green, penwidth=2];
-    v1 -- u2 [color=green, penwidth=1];
-    
-}
-```
-:::
-
-------------------------------------------------------------------------
-<!--
-## Proof of Thm. 4 - Claim Proof
-
--   We prove $d_{G'}(s,u_1) \le d_{G}(s,u_1)$.
--   Let $P$ be a shortest $su_1$-path in $G$.
--   We show that $P$ uses neither $e_1$ nor $e_2$.
-
-::: {.fragment .fade-in}
-```{dot}
-graph  {
-    label="μ = x + y + 2";
-    labelloc = "t";
-    rankdir=LR
-    node [shape=circle];
-    s [label="s", style=filled, fillcolor=lightblue];
-    t [label="t", style=filled, fillcolor=lightblue];
-    u1 [label="u1"];
-    v1 [label="v1"];
-    u2 [label="u2"];
-    v2 [label="v2"];
-
-    s -- u1 [style="dotted", label=" ≤ x"];
-    v2 -- t [style="dotted", label=" ≤ y"];
-    u1 -- v1 [label="e1", color=red, penwidth=2];
-    u2 -- v2 [label="e2", color=red, penwidth=2];
-    
-    u1 -- v2 [color=green, penwidth=2];
-    v1 -- u2 [color=green, penwidth=1];
-    
-}
-```
-:::
-
-## Proof of Thm. 4 - Claim Proof
-
--   $P$ cannot use $e_1$ since $d(s,v_1) \ge d(s,u_1)$.
--   $P$ cannot use $e_2$, otherwise $$x + y + 2 = d(s,t) \le |P| + 1 + d(u_2,t) \le x + y + 1$$ 
-
-------------------------------------------------------------------------
--->
-
 ## Complexity Analysis
 
 -   We have shown that the query complexity of $A'$ is $\Omega(\min\{|E_s|, |E_t|\})$.
@@ -1222,7 +1146,7 @@ graph  {
 2.  The backward search closes at most one vertex of distance $\ge y+2$ from $t$.
 :::
 
--   The forward search explores at most $|\bar{B}_{x+1}(s)| + 1 \le |E_s| + 1$ vertices.
+-   The forward search explores at most $|\bar{B}_{x+1}(s)| + 1 \le 1 + |E_s| + 1 = O(|E_s|)$ vertices.
 -   That is, $O(\Delta |E_s|)$ edges are explored.
 -   Similarly, the backward search explores at most $O(\Delta |E_t|)$ edges.
 -   Hence, the query complexity is $O(\Delta \min\{|E_s|, |E_t|\})$.
@@ -1288,5 +1212,3 @@ graph  {
 - Algorithm 2 is instance-optimal in:
     1. Positive-weighted multigraphs;
     2. Unweighted multigraphs, up to a factor of $\Delta$.
-
---------------------------------------------------------------------------- 
